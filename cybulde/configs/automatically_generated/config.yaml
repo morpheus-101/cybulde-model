@@ -20,16 +20,16 @@ infrastructure:
     mlflow_internal_tracking_uri: http://127.0.0.1:6101
     experiment_name: Default
     run_name: null
-    run_id: ca9730805dbd4c11a223f1e82ff6bc12
+    run_id: 87e6220c6cd04353adbafc90b319e096
     experiment_id: '0'
-    experiment_url: http://127.0.0.1:6101/#/experiments/0/runs/ca9730805dbd4c11a223f1e82ff6bc12
-    artifact_uri: /mlflow-artifact-store/0/ca9730805dbd4c11a223f1e82ff6bc12/artifacts
+    experiment_url: http://127.0.0.1:6101/#/experiments/0/runs/87e6220c6cd04353adbafc90b319e096
+    artifact_uri: /mlflow-artifact-store/0/87e6220c6cd04353adbafc90b319e096/artifacts
     block_mlflow: false
 save_last_checkpoint_every_n_train_steps: 500
 seed: 1234
 tasks:
   binary_text_classification_task:
-    _target_: cybulde.training.tasks.common_training_task.CommonTrainingTask
+    _target_: cybulde.training.tasks.tar_model_exporting_training_task.TarModelExportingTrainingTask
     name: binary_text_classfication_task
     data_module:
       _target_: cybulde.data_modules.data_modules.TextClassificationDataModule
@@ -127,10 +127,10 @@ tasks:
         save_dir: null
         prefix: ''
         artifact_location: null
-        run_id: ca9730805dbd4c11a223f1e82ff6bc12
+        run_id: 87e6220c6cd04353adbafc90b319e096
       callbacks:
       - _target_: lightning.pytorch.callbacks.ModelCheckpoint
-        dirpath: /mlflow-artifact-store/0/ca9730805dbd4c11a223f1e82ff6bc12/artifacts/best-checkpoints/
+        dirpath: /mlflow-artifact-store/0/87e6220c6cd04353adbafc90b319e096/artifacts/best-checkpoints/
         filename: null
         monitor: validation_f1_score
         verbose: false
@@ -144,7 +144,7 @@ tasks:
         every_n_epochs: null
         save_on_train_epoch_end: null
       - _target_: lightning.pytorch.callbacks.ModelCheckpoint
-        dirpath: /mlflow-artifact-store/0/ca9730805dbd4c11a223f1e82ff6bc12/artifacts/last-checkpoints/
+        dirpath: /mlflow-artifact-store/0/87e6220c6cd04353adbafc90b319e096/artifacts/last-checkpoints/
         filename: checkpoint-{epoch}
         monitor: null
         verbose: false
@@ -189,5 +189,6 @@ tasks:
       sync_batchnorm: true
       reload_dataloaders_every_n_epochs: 0
       default_root_dir: ./data/pytorch-lightning
-    best_training_checkpoint: /mlflow-artifact-store/0/ca9730805dbd4c11a223f1e82ff6bc12/artifacts/best-checkpoints/last.ckpt
-    last_training_checkpoint: /mlflow-artifact-store/0/ca9730805dbd4c11a223f1e82ff6bc12/artifacts/last-checkpoints/last.ckpt
+    best_training_checkpoint: /mlflow-artifact-store/0/87e6220c6cd04353adbafc90b319e096/artifacts/best-checkpoints/last.ckpt
+    last_training_checkpoint: /mlflow-artifact-store/0/87e6220c6cd04353adbafc90b319e096/artifacts/last-checkpoints/last.ckpt
+    tar_model_export_path: /mlflow-artifact-store/0/87e6220c6cd04353adbafc90b319e096/artifacts/exported_model.tar.gz

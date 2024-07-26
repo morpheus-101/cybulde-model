@@ -13,27 +13,7 @@ from omegaconf import DictConfig, OmegaConf
 from hydra.utils import instantiate
 from cybulde.config_schemas.training.training_task_schemas import setup_config
 from cybulde.training.tasks.common_training_task import CommonTrainingTask
-
-from cybulde.config_schemas import data_module_schemas
-from cybulde.config_schemas.base_schemas import TaskConfig
-from cybulde.config_schemas.trainer import trainer_schemas
-from cybulde.config_schemas.training import training_lightning_module_schemas
-
-name: str = "binary_text_classfication_task"
-data_module: data_module_schemas.DataModuleConfig = (
-    data_module_schemas.ScrappedDataTextClassificationDataModuleConfig()
-)
-lightning_module: training_lightning_module_schemas.TrainingLightningModuleConfig = (
-    training_lightning_module_schemas.CybuldeBinaryTextClassificationTrainingLightningModuleConfig()
-)
-trainer: trainer_schemas.TrainerConfig = trainer_schemas.GPUDev()
-ctt = CommonTrainingTask(name=name,
-                         data_module=data_module,
-                         lightning_module=lightning_module,
-                         trainer=trainer,
-                         best_training_checkpoint='best',
-                         last_training_checkpoint='last')
-print(ctt)
+from cybulde.models.common.exporter import TarModelLoader
 
 # setup_config()
 
@@ -51,8 +31,10 @@ print(ctt)
 
 
 
+def main() -> None:
+    model_loader = TarModelLoader("/mlflow-artifact-store/0/87e6220c6cd04353adbafc90b319e096/artifacts/exported_model.tar.gz")
+    model = model_loader.load()
+    print(model)
 
-
-
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()

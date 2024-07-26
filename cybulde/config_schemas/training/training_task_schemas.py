@@ -15,9 +15,9 @@ class TrainingTaskConfig(TaskConfig):
     last_training_checkpoint: str = SI("${infrastructure.mlflow.artifact_uri}/last-checkpoints/last.ckpt")
 
 
-# @dataclass
-# class TarModelExportingTrainingTaskConfig(TrainingTaskConfig):
-#     tar_model_export_path: str = SI("${infrastructure.mlflow.artifact_uri}/exported_model.tar.gz")
+@dataclass
+class TarModelExportingTrainingTaskConfig(TrainingTaskConfig):
+    tar_model_export_path: str = SI("${infrastructure.mlflow.artifact_uri}/exported_model.tar.gz")
 
 
 @dataclass
@@ -26,9 +26,8 @@ class CommonTrainingTaskConfig(TrainingTaskConfig):
 
 
 @dataclass
-# class DefaultCommonTrainingTaskConfig(TarModelExportingTrainingTaskConfig):
-class DefaultCommonTrainingTaskConfig(CommonTrainingTaskConfig):
-    # _target_: str = "cybulde.training.tasks.tar_model_exporting_training_task.TarModelExportingTrainingTask"
+class DefaultCommonTrainingTaskConfig(TarModelExportingTrainingTaskConfig):
+    _target_: str = "cybulde.training.tasks.tar_model_exporting_training_task.TarModelExportingTrainingTask"
     name: str = "binary_text_classfication_task"
     data_module: data_module_schemas.DataModuleConfig = (
         data_module_schemas.ScrappedDataTextClassificationDataModuleConfig()
