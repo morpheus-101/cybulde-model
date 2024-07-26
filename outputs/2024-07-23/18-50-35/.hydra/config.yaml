@@ -1,0 +1,13 @@
+_target_: cybulde.data_modules.data_modules.TextClassificationDataModule
+batch_size: ???
+shuffle: false
+num_workers: 8
+pin_memory: true
+drop_last: true
+persistent_workers: false
+train_df_path: ???
+dev_df_path: ???
+test_df_path: ???
+transformation: ???
+text_column_name: cleaned_text
+label_column_name: label
