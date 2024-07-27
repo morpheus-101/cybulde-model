@@ -38,10 +38,10 @@ class CommonEvaluationTask(TarModelEvaluationTask):
         with activate_mlflow(experiment_name=experiment_name, run_id=run_id, run_name=run_name) as _:
             self.trainer.test(model=self.lightning_module, datamodule=self.data_module)
 
-        # model_selector = instantiate(config.model_selector)
-        # assert config.registered_model_name is not None
-        # if model_selector is not None:
-        #     if model_selector.is_selected():
-        #         log_model(
-        #             config.infrastructure.mlflow, model_selector.get_new_best_run_tag(), config.registered_model_name
-        #         )
+        model_selector = instantiate(config.model_selector)
+        assert config.registered_model_name is not None
+        if model_selector is not None:
+            if model_selector.is_selected():
+                log_model(
+                    config.infrastructure.mlflow, model_selector.get_new_best_run_tag(), config.registered_model_name
+                )
