@@ -1,40 +1,23 @@
-# from cybulde.models.transformations import HuggingFaceTokenizationTransformation
+from cybulde.evaluation.tasks import common_evaluation_task
 
-# pretrained_tokenizer_name_or_path = "gs://rbd-mlflow/data/processed/rebalanced_splits/trained_tokenizer"
-# max_sequence_length = 72
-
-# tokenizer = HuggingFaceTokenizationTransformation(pretrained_tokenizer_name_or_path, max_sequence_length)
-# texts = ["hi! how are you?"]
-# output = tokenizer(texts)
-# print(f"output = {output}")
-
-import hydra
-from omegaconf import DictConfig, OmegaConf
-from hydra.utils import instantiate
-from cybulde.config_schemas.training.training_task_schemas import setup_config
-from cybulde.training.tasks.common_training_task import CommonTrainingTask
-from cybulde.models.common.exporter import TarModelLoader
-
-# setup_config()
-
-# @hydra.main(config_name="test_training_task", version_base=None)
-# def main(config: DictConfig) -> None:
-#     print(60 * "#")
-#     print(OmegaConf.to_yaml(config))
-#     print(60 * "#")
-
-    # model = instantiate(config)
-    # texts = ["hello, how are you?", "i am doing good!"]
-    # encodings = model.backbone.transformation(texts)
-    # output = model(encodings)
-    # print(f"{output.shape}")
+# name: str = "binary_text_evaluation_task"
+# lightning_module: evaluation_lightning_module_schemas.PartialEvaluationLightningModuleConfig = (
+#     evaluation_lightning_module_schemas.BinaryTextEvaluationLightningModuleConfig()
+# )
+# data_module: data_module_schemas.DataModuleConfig = (
+#     data_module_schemas.ScrappedDataTextClassificationDataModuleConfig()
+# )
+# trainer: trainer_schemas.TrainerConfig = trainer_schemas.GPUDev()
 
 
+# def main() -> None:
+#     cet = CommonEvaluationTask(name=name,
+#                                data_module=data_module,
+#                                lightning_module=lightning_module,
+#                                trainer=trainer,
+#                                tar_model_path="/mlflow-artifact-store/0/e05abada5808441293f104b7021d6a38/artifacts/exported_model.tar.gz")
+#     print(cet)
 
-def main() -> None:
-    model_loader = TarModelLoader("/mlflow-artifact-store/0/87e6220c6cd04353adbafc90b319e096/artifacts/exported_model.tar.gz")
-    model = model_loader.load()
-    print(model)
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
