@@ -74,7 +74,7 @@ class GPUDev(TrainerConfig):
 
 @dataclass
 class GPUProd(TrainerConfig):
-    max_epochs: int = 20
+    max_epochs: int = 3
     accelerator: str = "gpu"
     log_every_n_steps: int = 20
     logger: Optional[list[logger_schemas.LoggerConfig]] = field(

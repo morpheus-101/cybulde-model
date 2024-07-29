@@ -12,6 +12,7 @@ PYTHON_HASH_SEED=$(curl --silent --fail http://metadata.google.internal/computeM
 MLFLOW_TRACKING_URI=$(curl --silent http://metadata.google.internal/computeMetadata/v1/instance/attributes/mlflow_tracking_uri -H "Metadata-Flavor: Google")
 NODE_COUNT=$(curl --silent http://metadata.google.internal/computeMetadata/v1/instance/attributes/node_count -H "Metadata-Flavor: Google")
 DISKS=$(curl --silent http://metadata.google.internal/computeMetadata/v1/instance/attributes/disks -H "Metadata-Flavor: Google")
+ETCD_IP=$(curl --silent http://metadata.google.internal/computeMetadata/v1/instance/attributes/etcd_ip -H "Metadata-Flavor: Google")
 
 INSTANCE_GROUP_NAME=$(echo ${INSTANCE_GROUP_NAME} | tr '[:upper:]' '[:lower:]')
 
@@ -20,23 +21,39 @@ echo -e "TRAINING: instance group name: ${INSTANCE_GROUP_NAME}, docker image: ${
 echo "============= Installing Nvidia Drivers ==============="
 # apt-get update && /opt/deeplearning/install-driver.sh
 sudo apt-get update
-# yes | sudo /opt/deeplearning/install-driver.sh
 
 echo "============= Downloading docker image ==============="
 gcloud auth configure-docker --quiet us-east1-docker.pkg.dev
 time docker pull "${DOCKER_IMAGE}"
 
 echo "============= TRAINING: start ==============="
-docker run --init --rm --gpus all --ipc host --user root --hostname "$(hostname)" --privileged \
-    --log-driver=gcplogs \
-    -e PYTHONHASHSEED="${PYTHON_HASH_SEED}" \
-    -e MLFLOW_TRACKING_URI="${MLFLOW_TRACKING_URI}" \
-    -e TOKENIZERS_PARALLELISM=false \
-    ${DOCKER_IMAGE} \
-    torchrun \
-    --nnodes="${NODE_COUNT}" \
-    --nproc_per_node=1 \
-    cybulde/run_tasks.py || echo '================ TRAINING: job failed ==============='
+
+if [ "${ETCD_IP}" = "None" ]; then
+	docker run --init --rm --gpus all --ipc host --user root --hostname "$(hostname)" --privileged \
+		--log-driver=gcplogs \
+		-e PYTHONHASHSEED="${PYTHON_HASH_SEED}" \
+		-e MLFLOW_TRACKING_URI="${MLFLOW_TRACKING_URI}" \
+		-e TOKENIZERS_PARALLELISM=false \
+		${DOCKER_IMAGE} \
+		torchrun \
+		--nnodes="${NODE_COUNT}" \
+		--nproc_per_node=1 \
+		cybulde/run_tasks.py || echo '================ TRAINING: job failed ==============='
+else
+	docker run --init --rm --gpus all --ipc host --user root --hostname "$(hostname)" --privileged \
+		--log-driver=gcplogs \
+		-e PYTHONHASHSEED="${PYTHON_HASH_SEED}" \
+		-e MLFLOW_TRACKING_URI="${MLFLOW_TRACKING_URI}" \
+		-e TOKENIZERS_PARALLELISM=false \
+		${DOCKER_IMAGE} \
+		torchrun \
+		--nnodes="${NODE_COUNT}" \
+		--nproc_per_node=1 \
+		--rdzv_id="${INSTANCE_GROUP_NAME}" \
+		--rdzv_backend=etcd-v2 \
+		--rdzv_endpoint="${ETCD_IP}" \
+		cybulde/run_tasks.py || echo '================ TRAINING: job failed ==============='
+fi
 
 echo "============= Cleaning up ==============="
 echo "Deleting instance group ${INSTANCE_GROUP_NAME}"

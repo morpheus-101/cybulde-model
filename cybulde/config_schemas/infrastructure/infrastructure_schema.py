@@ -26,6 +26,7 @@ class InfrastructureConfig:
     zone: str = "us-east1-c"
     instance_group_creator: InstanceGroupCreatorConfig = InstanceGroupCreatorConfig()
     mlflow: MLFlowConfig = MLFlowConfig()
+    etcd_ip: Optional[str] = "10.142.0.46:2379"
 
 
 def setup_config() -> None:
