@@ -9,7 +9,8 @@ from cybulde.infrastructure.instance_template_creator import VMType
 @dataclass
 class BootDiskConfig:
     project_id: str = "deeplearning-platform-release"
-    name: str = "common-cu113-v20230925"
+    # name: str = "common-cu113-v20230925"
+    name: str = "common-cu118-v20240708"
     size_gb: int = 50
     labels: Any = SI("${..labels}")
 
@@ -45,8 +46,10 @@ class InstanceTemplateCreatorConfig:
             "https://www.googleapis.com/auth/cloudruntimeconfig",
         ]
     )
-    network: str = "https://www.googleapis.com/compute/v1/projects/cybulde/global/networks/default"
-    subnetwork: str = "https://www.googleapis.com/compute/v1/projects/cybulde/regions/us-east1/subnetworks/default"
+    # network: str = "https://www.googleapis.com/compute/v1/projects/cybulde/global/networks/default"
+    # subnetwork: str = "https://www.googleapis.com/compute/v1/projects/cybulde/regions/us-east1/subnetworks/default"
+    network: str = SI("https://www.googleapis.com/compute/v1/projects/${.project_id}/global/networks/default")
+    subnetwork: str = SI("https://www.googleapis.com/compute/v1/projects/${.project_id}/regions/us-east1/subnetworks/default")
     startup_script_path: str = "scripts/vm_startup/task_runner_startup_script.sh"
     vm_config: VMConfig = VMConfig()
     boot_disk_config: BootDiskConfig = BootDiskConfig()

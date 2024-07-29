@@ -8,6 +8,7 @@ x-app-template: &APP_TEMPLATE
   user: "${USER_ID:-1000}"
   hostname: "${HOST_NAME:-rishikeshdhayarkar}"
   image: cybulde-model
+  platform: linux/amd64
   build:
     context: .
     dockerfile: ./docker/Dockerfile

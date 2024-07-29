@@ -23,7 +23,7 @@ class MLFlowConfig:
 @dataclass
 class InfrastructureConfig:
     project_id: str = "gcp-101-426822"
-    zone: str = "us-east1-d"
+    zone: str = "us-east1-c"
     instance_group_creator: InstanceGroupCreatorConfig = InstanceGroupCreatorConfig()
     mlflow: MLFlowConfig = MLFlowConfig()
 
