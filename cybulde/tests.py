@@ -49,3 +49,12 @@
 #     # return instance_list
 
 # list_instances("deeplearning-platform-release", )
+
+
+# from cybulde.models.common.exporter import TarModelLoader
+
+# model_path = "gs://rbd-mlflow/367542467757527168/a221c00a525c4cd8bb75730be100b238/artifacts/exported_model.tar.gz"
+# # model_path = os.path.join(model_source, "exported_model.tar.gz")  # type: ignore
+# model = TarModelLoader(model_path).load()
+# print(model)
+
